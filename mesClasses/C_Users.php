@@ -3,10 +3,11 @@ require_once 'C_User.php';
 require_once 'Cdao.php';
 
 class C_Users {
-    private $tabUsers;
+    private $tabUsers = [];
 
     public function __construct(){
         $odao = new Cdao();
+        // Récupération des utilisateurs avec leur mot de passe haché
         $query = "SELECT * FROM visiteur";
         $tabUser = $odao->getTabDataFromSql($query);
 
@@ -16,7 +17,7 @@ class C_Users {
                 $i['nom'],
                 $i['prenom'],
                 $i['login'],
-                $i['mdp'],
+                $i['hash_password'],  // Utilisation de hash_password
                 $i['adresse'],
                 $i['cp'],
                 $i['ville'],
@@ -24,19 +25,20 @@ class C_Users {
         }
     }
 
+    // Vérification du login et du mot de passe haché
     public function CheckLoginInfo($gLogin, $gMdp){
         foreach($this->tabUsers as $user){
-            
-            // Compare the password with the hashed password in the 'hashed_mdp' field
-            if ($user->Login() == $gLogin && password_verify($gMdp, $user->HashedMd())) 
-             {
+            // Compare le mot de passe saisi avec le mot de passe haché
+            if ($user->Login() == $gLogin && password_verify($gMdp, $user->HashPassword())) {
                 return true;
             }
         }
         return false;
     }
 
+    // Récupère tous les utilisateurs
     public function getAllUsers() {
         return $this->tabUsers;
     }
 }
+?>
