@@ -1,5 +1,6 @@
 <?php
 require_once 'mesClasses/Ctrl.php';
+require_once 'includes/navbar.php'; // Inclusion de la barre de navigation
 
 session_start();
 
