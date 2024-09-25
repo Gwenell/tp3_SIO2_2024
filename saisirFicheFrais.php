@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'includes/navbar.php'; // Inclusion de la barre de navigation
+require_once 'mesClasses/Cdao.php';
 
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -8,12 +9,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit();
 }
 
-$fraisHorsForfait = []; // Initialisation des frais hors forfait
-
-// Affichage des formulaires et frais
-include 'includes/form_FF.php';  // Formulaire pour frais forfaitaires
-include 'includes/form_FHF.php'; // Formulaire pour frais hors forfait
-include 'includes/afficheFHF.php'; // Affichage des frais hors forfait
+$dao = new Cdao();
+$query = "SELECT * FROM lignefraishorsforfait WHERE idVisiteur = :idVisiteur";
+$fraisHorsForfait = $dao->getTabDataFromSql($query, ['idVisiteur' => $_SESSION['idVisiteur']]);
 
 $pageTitle = "Fiche Frais";
 include 'includes/head.php';
@@ -28,7 +26,7 @@ include 'includes/head.php';
         <form action="submitFicheFrais.php" method="POST">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="montantFF">Montant des frais forfaitaires</label>
-                <input type="number" id="montantFF" name="montantFF" class="w-full p-2 border border-gray-300 rounded">
+                <input type="number" id="montantFF" name="montantFF" class="w-full p-2 border border-gray-300 rounded" required>
             </div>
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Enregistrer
@@ -42,12 +40,12 @@ include 'includes/head.php';
         <form action="submitFraisHorsForfait.php" method="POST">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="libelleFHF">Libellé du frais hors forfait</label>
-                <input type="text" id="libelleFHF" name="libelleFHF" class="w-full p-2 border border-gray-300 rounded">
+                <input type="text" id="libelleFHF" name="libelleFHF" class="w-full p-2 border border-gray-300 rounded" required>
             </div>
 
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="montantFHF">Montant des frais hors forfait</label>
-                <input type="number" id="montantFHF" name="montantFHF" class="w-full p-2 border border-gray-300 rounded">
+                <input type="number" id="montantFHF" name="montantFHF" class="w-full p-2 border border-gray-300 rounded" required>
             </div>
 
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">

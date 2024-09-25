@@ -1,22 +1,17 @@
 <?php
 session_start();
 require_once 'mesClasses/Cdao.php';
-require_once 'mesClasses/CficheFrais.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $idVisiteur = $_SESSION['idVisiteur'];
-    $mois = date('Ym');
     $libelleFHF = $_POST['libelleFHF'];
     $montantFHF = $_POST['montantFHF'];
+    $idVisiteur = $_SESSION['idVisiteur'];
+    $mois = date('Ym');
 
     $dao = new Cdao();
-    $ficheFrais = new CficheFrais($idVisiteur, $mois);
-    
-    // Vérifier ou insérer la fiche de frais
-    $ficheFrais->insertFicheFrais($dao);
-
-    // Ajouter les frais hors forfait
-    $ficheFrais->ajouterFraisHorsForfait($dao, $libelleFHF, $montantFHF);
+    $query = "INSERT INTO lignefraishorsforfait (idVisiteur, mois, libelle, montant, date)
+              VALUES (:idVisiteur, :mois, :libelle, :montant, NOW())";
+    $dao->execute($query, ['idVisiteur' => $idVisiteur, 'mois' => $mois, 'libelle' => $libelleFHF, 'montant' => $montantFHF]);
 
     header("Location: saisirFicheFrais.php");
     exit();
