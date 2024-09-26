@@ -1,6 +1,6 @@
 <?php
 require_once 'mesClasses/Ctrl.php';
-require_once 'includes/navbar.php'; // Inclusion de la barre de navigation
+//require_once 'includes/navbar.php'; // Inclusion de la barre de navigation
 
 session_start();
 
@@ -40,99 +40,84 @@ $pageTitle = "Liste des visiteurs";
 include 'includes/head.php';
 ?>
 
-<div class="container mx-auto mt-8 px-4">
-    <h2 class="text-2xl font-bold mb-4">Liste des visiteurs</h2>
+<body class="bg-gray-100">
+    <?php include 'includes/navbar.php'; ?>
+
+    <!-- Removed the duplicate header to avoid double blue bars -->
+    <!-- <h1 class="text-4xl font-bold text-center mb-6 text-blue-600">Liste des Visiteurs</h1> -->
 
     <!-- Formulaire de filtrage -->
-    <form class="mb-6" method="POST" action="">
-        <div class="flex flex-wrap -mx-3 mb-6">
-            <!-- Filtrage par ville -->
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="ville">
-                    Choisir la ville
-                </label>
-                <div class="relative">
-                    <select name="ville" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                        <option value="toutes">Toutes villes</option>
-                        <?php
-                        // Récupère les villes uniques à partir des visiteurs
-                        $villes = array_unique(array_map(function($user) {
-                            return $user->Ville();
-                        }, $visiteurs));
+    <div class="container mx-auto mt-8 px-4">
+        <h1 class="text-4xl font-bold text-center mb-6 text-blue-600">Liste des Visiteurs</h1>
 
-                        foreach ($villes as $v) {
-                            $selected = ($ville === $v) ? 'selected' : '';
-                            echo "<option value='".htmlspecialchars($v)."' $selected>".htmlspecialchars($v)."</option>";
-                        }
-                        ?>
-                    </select>
+        <form class="mb-6" method="POST" action="">
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <!-- Filtrage par ville -->
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="ville">
+                        Choisir la ville
+                    </label>
+                    <div class="relative">
+                        <select name="ville" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                            <option value="toutes" <?= $ville === 'toutes' ? 'selected' : '' ?>>Toutes les villes</option>
+                            <?php foreach ($visiteurs as $visiteur) : ?>
+                                <option value="<?= $visiteur->Ville() ?>" <?= $ville === $visiteur->Ville() ? 'selected' : '' ?>><?= $visiteur->Ville() ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Filtrage par nom -->
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="partieNom">
+                        Nom (Partie)
+                    </label>
+                    <input name="partieNom" value="<?= $partieNom ?>" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="partieNom" type="text" placeholder="Nom...">
+                </div>
+
+                <!-- Filtrage par début ou fin du nom -->
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="debutFin">
+                        Début ou Fin
+                    </label>
+                    <div class="relative">
+                        <select name="debutFin" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                            <option value="debut" <?= $debutFin === 'debut' ? 'selected' : '' ?>>Début</option>
+                            <option value="fin" <?= $debutFin === 'fin' ? 'selected' : '' ?>>Fin</option>
+                            <option value="contient" <?= $debutFin === 'contient' ? 'selected' : '' ?>>Contient</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <!-- Filtrage par nom -->
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="partieNom">
-                    Saisir tout ou partie du nom
-                </label>
-                <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" name="partieNom" value="<?= htmlspecialchars($partieNom, ENT_QUOTES) ?>" />
+            <div class="flex items-center justify-between">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Filtrer
+                </button>
             </div>
+        </form>
 
-            <!-- Choix du filtrage (Début, Fin, N'importe) -->
-            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                    Filtrer par
-                </label>
-                <div class="flex">
-                    <label class="inline-flex items-center mr-4">
-                        <input type="radio" class="form-radio" name="debutFin" value="debut" <?= $debutFin === 'debut' ? 'checked' : '' ?>>
-                        <span class="ml-2">Début</span>
-                    </label>
-                    <label class="inline-flex items-center mr-4">
-                        <input type="radio" class="form-radio" name="debutFin" value="fin" <?= $debutFin === 'fin' ? 'checked' : '' ?>>
-                        <span class="ml-2">Fin</span>
-                    </label>
-                    <label class="inline-flex items-center">
-                        <input type="radio" class="form-radio" name="debutFin" value="nimporte" <?= $debutFin === 'nimporte' ? 'checked' : '' ?>>
-                        <span class="ml-2">Dans la chaîne</span>
-                    </label>
-                </div>
-            </div>
+        <!-- Affichage de la liste des visiteurs -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-3 bg-gray-100 border-b">Nom</th>
+                        <th class="py-2 px-3 bg-gray-100 border-b">Ville</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($visiteursFiltres as $visiteur) : ?>
+                        <tr>
+                            <td class="border px-4 py-2"><?= $visiteur->Nom() ?></td>
+                            <td class="border px-4 py-2"><?= $visiteur->Ville() ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
-
-        <!-- Bouton de filtrage -->
-        <div class="flex justify-end">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Filtrer
-            </button>
-        </div>
-    </form>
-
-    <!-- Table des visiteurs -->
-    <table class="min-w-full bg-white border border-gray-300">
-        <thead class="bg-gray-800 text-white">
-            <tr>
-                <th class="py-3 px-4 text-left">Nom</th>
-                <th class="py-3 px-4 text-left">Prénom</th>
-                <th class="py-3 px-4 text-left">Login</th>
-                <th class="py-3 px-4 text-left">Ville</th>
-            </tr>
-        </thead>
-        <tbody class="text-gray-700">
-            <?php foreach ($visiteursFiltres as $user): ?>
-                <tr class="border-t border-gray-300">
-                    <td class="py-3 px-4"><?php echo htmlspecialchars($user->Nom()); ?></td>
-                    <td class="py-3 px-4"><?php echo htmlspecialchars($user->Prenom()); ?></td>
-                    <td class="py-3 px-4"><?php echo htmlspecialchars($user->Login()); ?></td>
-                    <td class="py-3 px-4"><?php echo htmlspecialchars($user->Ville()); ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-
-    <!-- Bouton de déconnexion -->
-    <div class="mt-6">
-        <a href="seConnecter.php?logout=1" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Se déconnecter</a>
     </div>
-</div>
 
-<?php include 'includes/footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
+</body>
+</html>
