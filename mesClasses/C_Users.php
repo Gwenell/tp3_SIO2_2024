@@ -17,7 +17,7 @@ class C_Users {
                 $i['nom'],
                 $i['prenom'],
                 $i['login'],
-                $i['hash_password'],  // Utilisation de hash_password
+                $i['hash_password'],
                 $i['adresse'],
                 $i['cp'],
                 $i['ville'],
@@ -30,10 +30,10 @@ class C_Users {
         foreach($this->tabUsers as $user){
             // Compare le mot de passe saisi avec le mot de passe haché
             if ($user->Login() == $gLogin && password_verify($gMdp, $user->HashPassword())) {
-                return true;
+                return $user;  // Retourne l'objet utilisateur complet
             }
         }
-        return false;
+        return null;
     }
 
     // Récupère tous les utilisateurs
@@ -41,4 +41,3 @@ class C_Users {
         return $this->tabUsers;
     }
 }
-?>

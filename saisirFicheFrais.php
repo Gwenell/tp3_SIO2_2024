@@ -4,8 +4,8 @@ require_once 'mesClasses/Ctrl.php';
 require_once 'mesClasses/Cdao.php';
 require_once 'mesClasses/CficheFrais.php';
 
-// Vérification si l'utilisateur est connecté
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+// Vérification si l'utilisateur est connecté et si l'ID est défini
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['id'])) {
     header("Location: seConnecter.php");
     exit();
 }
@@ -14,6 +14,13 @@ $ctrl = new Ctrl();
 $dao = new Cdao();
 $idVisiteur = $_SESSION['id'];
 $mois = date('Ym');
+
+// Vérification supplémentaire de l'ID
+if (empty($idVisiteur)) {
+    error_log("L'ID de l'utilisateur est vide dans saisirFicheFrais.php");
+    header("Location: seConnecter.php");
+    exit();
+}
 
 $ficheFrais = new CficheFrais($idVisiteur, $mois);
 

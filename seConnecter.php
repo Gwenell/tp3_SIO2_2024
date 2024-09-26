@@ -11,8 +11,8 @@ if (isset($_GET['logout'])) {
 }
 
 // Redirection si l'utilisateur est déjà connecté
-if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-    header("Location: liste_visiteur.php");
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SESSION['id'])) {
+    header("Location: saisirFicheFrais.php");
     exit();
 }
 
@@ -23,11 +23,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $login = $_POST['login'];
     $password = $_POST['password'];
 
-    if ($ctrl->verifierConnexion($login, $password)) {
+    $user = $ctrl->verifierConnexion($login, $password);
+    if ($user) {
         $_SESSION['loggedin'] = true;
         $_SESSION['login'] = $login;
-        header("Location: liste_visiteur.php");
-        exit();
+        $_SESSION['id'] = $user->Id();
+        if (!isset($_SESSION['id'])) {
+            error_log("L'ID de l'utilisateur n'a pas pu être stocké dans la session.");
+            $error = "Erreur lors de la connexion. Veuillez réessayer.";
+        } else {
+            header("Location: saisirFicheFrais.php");
+            exit();
+        }
     } else {
         $error = "Login ou mot de passe incorrect";
     }

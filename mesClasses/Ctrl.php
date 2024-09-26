@@ -22,4 +22,3 @@ class Ctrl {
         return $users;
     }
 }
-?>
