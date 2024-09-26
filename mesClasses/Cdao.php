@@ -1,7 +1,4 @@
 <?php
-/**
- * Classe d'accès aux données (DAO - Data Access Object)
- */
 class Cdao {
     private $conn;
 
@@ -14,18 +11,12 @@ class Cdao {
         }
     }
 
-    /**
-     * Exécute une requête SQL SELECT et retourne les résultats
-     */
     public function getTabDataFromSql($query, $params = []) {
         $stmt = $this->conn->prepare($query);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Exécute une requête SQL (INSERT, UPDATE, DELETE)
-     */
     public function execute($query, $params = []) {
         $stmt = $this->conn->prepare($query);
         return $stmt->execute($params);
