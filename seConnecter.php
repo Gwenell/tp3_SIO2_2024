@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['loggedin'] = true;
         $_SESSION['login'] = $login;
         $_SESSION['id'] = $user->Id();
+        $_SESSION['prenom'] = $user->Prenom(); // Ajout du prénom à la session
         if (!isset($_SESSION['id'])) {
             error_log("L'ID de l'utilisateur n'a pas pu être stocké dans la session.");
             $error = "Erreur lors de la connexion. Veuillez réessayer.";
@@ -39,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Login ou mot de passe incorrect";
     }
 }
+
 
 $pageTitle = "Connexion";
 include 'includes/head.php';

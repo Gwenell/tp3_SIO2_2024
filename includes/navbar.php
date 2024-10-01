@@ -11,8 +11,13 @@
             </a>
         </div>
         
-        <a href="seConnecter.php?logout=1" class="text-white hover:text-gray-400 text-base">
-            Déconnexion
-        </a>
+        <div class="flex items-center space-x-4">
+            <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SESSION['prenom'])): ?>
+                <span class="text-white" style="color: #00bfff;"><?php echo htmlspecialchars($_SESSION['prenom']); ?></span>
+            <?php endif; ?>
+            <a href="seConnecter.php?logout=1" class="text-white hover:text-gray-400 text-base">
+                Déconnexion
+            </a>
+        </div>
     </div>
 </nav>

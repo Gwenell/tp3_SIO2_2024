@@ -17,5 +17,31 @@
         <button type="submit" name="submitFF" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Enregistrer
         </button>
+
+        <!-- Nouveau bouton pour voir les frais forfaitaires -->
+        <button type="button" id="voirFraisForfaitaires" class="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            Voir Frais Forfaitaires
+        </button>
     </form>
+
+    <!-- Section où les frais forfaitaires seront affichés -->
+    <div id="fraisForfaitairesList" class="mt-6 hidden bg-gray-100 p-4 rounded-lg shadow-md">
+        <!-- Le contenu des frais forfaitaires sera chargé ici -->
+    </div>
 </section>
+
+<script>
+    document.getElementById('voirFraisForfaitaires').addEventListener('click', function() {
+        // Effectuer une requête AJAX pour charger les frais forfaitaires
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'voirFraisForfaitaires.php', true); // Assurez-vous que ce fichier renvoie les frais
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Afficher le contenu renvoyé dans le div
+                document.getElementById('fraisForfaitairesList').innerHTML = xhr.responseText;
+                document.getElementById('fraisForfaitairesList').classList.remove('hidden');
+            }
+        };
+        xhr.send();
+    });
+</script>
