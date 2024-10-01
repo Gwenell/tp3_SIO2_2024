@@ -12,7 +12,7 @@ if (isset($_GET['logout'])) {
 
 // Redirection si l'utilisateur est déjà connecté
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true && isset($_SESSION['id'])) {
-    header("Location: saisirFicheFrais.php");
+    header("Location: liste_visiteur.php");
     exit();
 }
 
@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             error_log("L'ID de l'utilisateur n'a pas pu être stocké dans la session.");
             $error = "Erreur lors de la connexion. Veuillez réessayer.";
         } else {
-            header("Location: saisirFicheFrais.php");
+            header("Location: liste_visiteur.php");
             exit();
         }
     } else {
