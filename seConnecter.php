@@ -58,3 +58,7 @@ include 'includes/head.php';
 </div>
 
 <?php include 'includes/footer.php'; ?>
+
+<body style="background-color: #000000; color: #ffffff;">
+    <!-- Ton contenu -->
+</body>

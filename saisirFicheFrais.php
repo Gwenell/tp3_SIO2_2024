@@ -61,7 +61,7 @@ $pageTitle = "Saisie Fiche Frais";
 include 'includes/head.php';
 ?>
 
-<body class="bg-gray-100">
+<body class="bg-gray-800">
     <?php include 'includes/navbar.php'; ?>
 
     <div class="container mx-auto mt-8 px-4">
@@ -75,3 +75,6 @@ include 'includes/head.php';
     <?php include 'includes/footer.php'; ?>
 </body>
 </html>
+<body style="background-color: #000000; color: #ffffff;">
+    <!-- Ton contenu -->
+</body>

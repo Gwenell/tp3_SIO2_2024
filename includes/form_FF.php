@@ -1,12 +1,12 @@
-<section class="mb-8 p-6 bg-white shadow-md rounded-lg">
-    <h2 class="text-2xl font-semibold text-gray-700 mb-4">Frais Forfaitaires</h2>
+<section class="mb-8 p-6 bg-gray-900 shadow-md rounded-lg">
+    <h2 class="text-2xl font-semibold text-purple-500 mb-4">Frais Forfaitaires</h2>
     
     <!-- Formulaire pour entrer les frais forfaitaires -->
     <form action="saisirFicheFrais.php" method="POST">
         <!-- Sélection du type de frais forfaitaires -->
         <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="idFraisForfait">Type de frais forfaitaires</label>
-            <select id="idFraisForfait" name="idFraisForfait" class="w-full p-2 border border-gray-300 rounded" required>
+            <label class="block text-purple-500 text-sm font-bold mb-2" for="idFraisForfait">Type de frais forfaitaires</label>
+            <select id="idFraisForfait" name="idFraisForfait" class="w-full p-2 border border-gray-600 bg-gray-900 text-white rounded" required>
                 <option value="ETP" data-montant="110">Forfait Etape</option>
                 <option value="KM" data-montant="0.62">Frais Kilométrique</option>
                 <option value="NUI" data-montant="80">Nuitée Hôtel</option>
@@ -16,30 +16,29 @@
 
         <!-- Entrée de la quantité -->
         <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="quantite">Quantité</label>
-            <input type="number" id="quantite" name="quantite" class="w-full p-2 border border-gray-300 rounded" required>
+            <label class="block text-purple-500 text-sm font-bold mb-2" for="quantite">Quantité</label>
+            <input type="number" id="quantite" name="quantite" class="w-full p-2 border border-gray-600 bg-gray-900 text-white rounded" required>
         </div>
 
         <!-- Conteneur pour les boutons -->
         <div class="flex space-x-4">
             <!-- Bouton pour soumettre le formulaire -->
-            <button type="submit" name="submitFF" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button type="submit" name="submitFF" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
                 Enregistrer
             </button>
 
             <!-- Bouton pour afficher/masquer le tableau -->
-            <button type="button" id="toggleTable" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            <button type="button" id="toggleTable" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
                 Afficher/masquer Frais Forfaitaires
             </button>
         </div>
     </form>
 
     <!-- Section pour afficher les frais forfaitaires enregistrés -->
-    <div id="fraisForfaitairesList" class="mt-6 hidden bg-gray-100 p-4 rounded-lg shadow-md">
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Frais Forfaitaires Enregistrés</h3>
+    <div id="fraisForfaitairesList" class="mt-6 hidden bg-gray-900 p-4 rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold text-purple-500 mb-4">Frais Forfaitaires Enregistrés</h3>
 
         <?php
-        // Exemple d'accès à la base de données pour récupérer les frais forfaitaires
         $dao = new Cdao();
         $idVisiteur = $_SESSION['id']; // Remplacer par l'ID du visiteur connecté
         $mois = date('Ym'); // Remplacer par le mois en cours
@@ -52,27 +51,20 @@
         $fraisForfaitaires = $dao->getTabDataFromSql($query, $params);
 
         if (empty($fraisForfaitaires)) {
-            echo "<p>Aucun frais forfaitaire trouvé pour ce mois.</p>";
+            echo "<p class='text-purple-500'>Aucun frais forfaitaire trouvé pour ce mois.</p>";
         } else {
-            echo "<table class='min-w-full leading-normal text-center'>
-                    <thead>
-                        <tr>
-                            <th class='text-center'>Type de Frais</th>
-                            <th class='text-center'>Montant Unitaire</th>
-                            <th class='text-center'>Quantité</th>
-                            <th class='text-center'>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>";
+            echo "<table class='min-w-full leading-normal text-center text-white'>";
+            echo "<thead><tr class='bg-gray-800'><th class='text-purple-500'>Type de Frais</th><th class='text-purple-500'>Montant Unitaire</th><th class='text-purple-500'>Quantité</th><th class='text-purple-500'>Total</th></tr></thead>";
+            echo "<tbody>";
 
             foreach ($fraisForfaitaires as $frais) {
                 $total = $frais['montant'] * $frais['quantite'];
-                echo "<tr>
-                        <td>{$frais['libelle']}</td>
-                        <td>" . number_format($frais['montant'], 2) . " €</td>
-                        <td>{$frais['quantite']}</td>
-                        <td>" . number_format($total, 2) . " €</td>
-                      </tr>";
+                echo "<tr>";
+                echo "<td>{$frais['libelle']}</td>";
+                echo "<td>" . number_format($frais['montant'], 2) . " €</td>";
+                echo "<td>{$frais['quantite']}</td>";
+                echo "<td>" . number_format($total, 2) . " €</td>";
+                echo "</tr>";
             }
 
             echo "</tbody></table>";
@@ -103,11 +95,7 @@
     // Gestion de l'affichage du tableau avec le bouton "Afficher/masquer Frais Forfaitaires"
     document.getElementById('toggleTable').addEventListener('click', function() {
         const tableDiv = document.getElementById('fraisForfaitairesList');
-        if (tableDiv.classList.contains('hidden')) {
-            tableDiv.classList.remove('hidden');
-        } else {
-            tableDiv.classList.add('hidden');
-        }
+        tableDiv.classList.toggle('hidden');
     });
 </script>
 
