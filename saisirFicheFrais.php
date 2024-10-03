@@ -27,7 +27,7 @@ $ficheFrais = new CficheFrais($idVisiteur, $mois);
 // Traitement du formulaire des frais forfaitaires
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitFF'])) {
     $idFraisForfait = $_POST['idFraisForfait'];
-    $quantite = (int)$_POST['quantite']; // Ensure quantity is an integer
+    $quantite = (int)$_POST['quantite']; // Assurez-vous que la quantité est un entier
 
     // Vérification de l'existence du frais forfaitaire dans la base
     $fraisForfaitExists = $dao->verifierFraisForfait($idFraisForfait);
@@ -41,9 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitFF'])) {
 
 // Traitement du formulaire des frais hors forfait
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitFHF'])) {
-    $libelle = htmlspecialchars($_POST['libelle']); // Use htmlspecialchars to prevent XSS
+    $libelle = htmlspecialchars($_POST['libelle']); // Protection contre les failles XSS
     $date = $_POST['date'];
-    $montant = (float)$_POST['montant']; // Ensure montant is a float
+    $montant = (float)$_POST['montant']; // Assurez-vous que le montant est un float
 
     // Validation de la date et du montant
     if (strtotime($date) && $montant > 0) {

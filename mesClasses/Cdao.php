@@ -12,6 +12,14 @@ class Cdao {
         }
     }
 
+    // Méthode pour récupérer le montant d'un frais forfaitaire spécifique
+    public function getMontantFraisForfait($idFraisForfait) {
+        $query = "SELECT montant FROM fraisforfait WHERE id = :idFraisForfait";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute(['idFraisForfait' => $idFraisForfait]);
+        return $stmt->fetchColumn();
+    }
+
     // Méthode pour récupérer tous les frais forfaitaires triés par date
     public function getTousFraisForfaitSortedByDate() {
         $query = "SELECT f.libelle, f.montant, l.quantite, l.mois 
@@ -19,16 +27,6 @@ class Cdao {
                   JOIN fraisforfait f ON l.idFraisForfait = f.id 
                   ORDER BY l.mois DESC";
         return $this->getTabDataFromSql($query);
-    }
-
-    // Méthode pour récupérer les frais forfaitaires par type, triés par date
-    public function getFraisForfaitByTypeSortedByDate($typeFrais) {
-        $query = "SELECT f.libelle, f.montant, l.quantite, l.mois 
-                  FROM lignefraisforfait l 
-                  JOIN fraisforfait f ON l.idFraisForfait = f.id 
-                  WHERE l.idFraisForfait = :typeFrais 
-                  ORDER BY l.mois DESC";
-        return $this->getTabDataFromSql($query, ['typeFrais' => $typeFrais]);
     }
 
     // Méthode pour exécuter une requête SELECT et obtenir un tableau de résultats
@@ -64,19 +62,5 @@ class Cdao {
         $stmt->bindParam(':idFrais', $idFrais);
         $stmt->execute();
         return $stmt->fetchColumn() > 0;
-    }
-
-    // Méthode pour ajouter une nouvelle ligne de frais forfaitaire
-    public function ajouterFraisForfait($idVisiteur, $mois, $idFraisForfait, $quantite) {
-        $query = "INSERT INTO lignefraisforfait (idVisiteur, mois, idFraisForfait, quantite)
-                  VALUES (:idVisiteur, :mois, :idFraisForfait, :quantite)
-                  ON DUPLICATE KEY UPDATE quantite = quantite + :quantite";
-        $params = [
-            'idVisiteur' => $idVisiteur,
-            'mois' => $mois,
-            'idFraisForfait' => $idFraisForfait,
-            'quantite' => $quantite
-        ];
-        return $this->execute($query, $params);
     }
 }
